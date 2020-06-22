@@ -1,0 +1,40 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: redis-master
+  labels:
+    app: redis
+spec:
+  selector:
+    matchlabels:
+      app: redis
+      role: master
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: master
+        tier: backend
+    spec:
+      containers:
+        - name: master
+          image: redis:alpine
+          imagePullPolicy: Always
+          resoucers:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          volumeMounts:
+            - mountPath: /redis-master-data
+              name: data
+          ports:
+            - containerPort: 6379
+              name: master
+        volumes:
+          - name: data
+            emptyDir: {}
+
+
+
